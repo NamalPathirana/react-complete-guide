@@ -1,7 +1,23 @@
 import React, { Component } from 'react';
 import './App.css';
-import person from './Person/Person';
 import Person from './Person/Person';
+import Radium , {StyleRoot} from 'radium';
+import Style from 'styled-components';
+
+const StryledButton = Style.button`
+
+background-color:${props => props.alt ? 'red' : 'green'};
+color:white;
+font:inherit;
+border:1px soild blue;
+padding:8px;
+cursor:pointer;
+
+&:hover {
+background-color:${props => props.alt ? 'salmon' : 'lightgreen'};
+}
+
+`;
 
 class App extends Component {
   
@@ -16,7 +32,6 @@ class App extends Component {
 
   switchNameHandler = (name) =>{
     this.setState(
-      
       {persons:[
         {name:name ,age:'29'},
         {name:'gaje',age:'24'},
@@ -65,13 +80,15 @@ class App extends Component {
   render() {
 
   const style = {
-
-     backgroundColor:'white',
+     backgroundColor:'green',
+     color:'white',
      font:'inherit',
      border:'1px soild blue',
      padding:'8px',
      cursor:'pointer',
-
+     ':hover':{
+      backgroundColor:'lightGreen'
+     }
   }
 
   let personsDetails = null;
@@ -79,17 +96,14 @@ class App extends Component {
   if (this.state.elementVisiblity)
   {
 
-    
     personsDetails = (
       this.state.persons.map((person,index) => {
-
         return <Person name={person.name} 
         age = {person.age}
         click={()=>this.deletePersonsHandler(index)}
         key={person.id}
         change = {(event)=>{this.nameChangeHandler(event,person.id)}}
         />
-
       })
 
     // <div>
@@ -103,15 +117,33 @@ class App extends Component {
     // </div>
     );
 
+    style.backgroundColor = 'red';
+    style[':hover'] = {
+      backgroundColor : 'salmon',
+      color:'gray',
+    }
+
   }
 
+    const classes = [];
+
+    if(this.state.persons.map(p=>{}).length<=2)
+    {
+      classes.push('red');
+    }
+    if (this.state.persons.map(p=>{}).length<=1) {
+      classes.push('bold');
+    }
+
     return (
+      //<StyleRoot>
       <div className="App">
         <h1>Hi, im a react app</h1>
-        <p>It seems to work.</p>
-        <button style={style} onClick={this.togglePersonsHandler}>Show Detalis</button>
+        <p className = {classes.join(' ')} >It seems to work.</p>
+        <StryledButton 
+        alt = {this.state.elementVisiblity}
+        onClick={this.togglePersonsHandler}>Show Detalis</StryledButton>
         {personsDetails}
-     
       </div>
     );
 
